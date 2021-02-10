@@ -8,39 +8,51 @@
 
     <Button
         android:id="@+id/MeasureRespiratoryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="176dp"
+        android:layout_width="255dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="40dp"
         android:background="#FFFFFF"
         android:text="Measure Respiratory Rate"
         app:backgroundTint="@color/blue"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/MeasureHeartRateButton" />
 
     <Button
         android:id="@+id/ReportSymptomsButton"
-        android:layout_width="196dp"
-        android:layout_height="68dp"
+        android:layout_width="255dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="68dp"
+        android:background="@color/blue"
         android:text="Report Symptom"
         app:backgroundTint="@color/blue"
         app:backgroundTintMode="src_atop"
-        app:layout_constraintBottom_toTopOf="@+id/MeasureHeartRateButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.492" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <Button
         android:id="@+id/MeasureHeartRateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="92dp"
+        android:layout_width="255dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="40dp"
         android:background="#FFFFFF"
         android:text="Measure Heart Rate"
         app:backgroundTint="@color/blue"
-        app:layout_constraintBottom_toTopOf="@+id/MeasureRespiratoryButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ReportSymptomsButton" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@tools:sample/avatars" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
