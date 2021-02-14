@@ -2,6 +2,7 @@ package com.example.health_checker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -20,6 +21,11 @@ public class RespiratoryRateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent measureRate = new Intent(getApplicationContext(), RespiratoryRateService.class);
+                /*ProgressDialog progressDialog = new ProgressDialog(null);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.setCancelable(false);
+                progressDialog.setMessage("sd");
+                progressDialog.show();*/
                 startService(measureRate);
             }
         });
