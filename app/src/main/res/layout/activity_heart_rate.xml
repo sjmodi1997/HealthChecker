@@ -7,18 +7,27 @@
     tools:context=".HeartRateActivity">
 
     <TextView
+        android:id="@+id/heartRateValTextView"
+        android:layout_width="181dp"
+        android:layout_height="41dp"
+        android:layout_marginTop="128dp"
+        android:gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/heartRateBtn" />
+
+    <TextView
         android:id="@+id/heartRateTextView"
         android:layout_width="261dp"
         android:layout_height="43dp"
-        android:layout_marginTop="108dp"
+        android:layout_marginBottom="88dp"
         android:gravity="center"
         android:text="PLACE YOUR INDEX FINGER ON THE REAR CAMERA"
         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/heartRateBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.028" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/heartRateBtn"
@@ -28,16 +37,18 @@
         android:background="@color/blue"
         android:text="Measure Heart Rate"
         app:backgroundTint="@color/blue"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/heartRateTextView" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.32999998" />
 
     <Button
         android:id="@+id/heartRateUpData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="168dp"
+        android:layout_marginTop="216dp"
         android:background="@color/blue"
         android:text="Upload Data"
         app:backgroundTint="@color/blue"

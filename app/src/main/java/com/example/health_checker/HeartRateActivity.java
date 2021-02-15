@@ -304,9 +304,11 @@ public class HeartRateActivity extends AppCompatActivity {
                             if (heart_rate != "" )
                             {
                                 // Display the heart rate
-                                TextView textView = (TextView) findViewById(R.id.heartRateTextView);
+                                TextView textView = (TextView) findViewById(R.id.heartRateValTextView);
+                                Button button = (Button) findViewById(R.id.heartRateBtn);
                                 double hr = Double.parseDouble(heart_rate);
-                                textView.setText("The Heart Rate is: " + heart_rate + "\n");
+                                textView.setText("HEART RATE IS: " + heart_rate + "\n");
+                                button.setText("MEASURE HEART RATE AGAIN");
                                 //hideProgressDialogWithTitle();
                                 break;
                             }
