@@ -14,7 +14,7 @@
         android:background="#FFFFFF"
         android:text="Measure Respiratory Rate"
         android:visibility="visible"
-        app:backgroundTint="@color/blue"
+        app:backgroundTint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/MeasureHeartRateButton" />
@@ -24,10 +24,10 @@
         android:layout_width="255dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="68dp"
-        android:background="@color/blue"
+        android:background="@color/black"
         android:text="Report Symptom"
         android:visibility="visible"
-        app:backgroundTint="@color/blue"
+        app:backgroundTint="@color/black"
         app:backgroundTintMode="src_atop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
         android:background="#FFFFFF"
         android:text="Measure Heart Rate"
         android:visibility="visible"
-        app:backgroundTint="@color/blue"
+        app:backgroundTint="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,16 +49,15 @@
 
     <ImageView
         android:id="@+id/logoImageView"
-        android:layout_width="144dp"
-        android:layout_height="154dp"
-        android:layout_marginBottom="419dp"
+        android:layout_width="204dp"
+        android:layout_height="190dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.97"
-        tools:srcCompat="@tools:sample/avatars[2]" />
+        app:layout_constraintVertical_bias="0.112"
+        tools:srcCompat="@tools:sample/avatars[2] " />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
