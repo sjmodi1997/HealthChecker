@@ -9,7 +9,7 @@
     <Button
         android:id="@+id/MeasureRespiratoryButton"
         android:layout_width="255dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:background="#FFFFFF"
         android:text="Measure Respiratory Rate"
@@ -22,7 +22,7 @@
     <Button
         android:id="@+id/ReportSymptomsButton"
         android:layout_width="255dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="68dp"
         android:background="@color/blue"
         android:text="Report Symptom"
@@ -36,7 +36,7 @@
     <Button
         android:id="@+id/MeasureHeartRateButton"
         android:layout_width="255dp"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:background="#FFFFFF"
         android:text="Measure Heart Rate"

@@ -110,4 +110,6 @@ public class Algorithms {
         return sum / window.size();
     }
 
+
+
 }

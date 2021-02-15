@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.widget.Toast;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +84,7 @@ public class RespiratoryRateService extends Service implements SensorEventListen
         List<Double> z_avg = algos.calculate_moving_avg(mov_period, z);
         int peaksZ = algos.count_zero_crossings_threshold(z_avg);
 
-        Toast.makeText(this, "Measuring: " + Integer.toString(peaksY/2), Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Measure: " + Integer.toString(peaksY/2), Toast.LENGTH_LONG).show();
         try {
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
@@ -91,7 +93,7 @@ public class RespiratoryRateService extends Service implements SensorEventListen
             e.printStackTrace();
         }
 
-        return peaksZ/2;
+        return (int) peaksZ/2;
     }
 
     @Override
@@ -107,7 +109,12 @@ public class RespiratoryRateService extends Service implements SensorEventListen
             if(i>=1279) {
                 i = 0;
                 manager.unregisterListener(this);
-                getRespiratoryRate();
+
+                Intent intent = new Intent ("Respiratory Rate"); //put the same message as in the filter you used in the activity when registering the receiver
+                String val = Integer.toString(getRespiratoryRate());
+                intent.putExtra("RRvalue", val);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
             }
         }
     }
