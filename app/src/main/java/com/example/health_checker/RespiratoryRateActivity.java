@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 public class RespiratoryRateActivity extends AppCompatActivity {
     //TextView RespiRateView;
-    ProgressDialog progressDialog;
+    private ProgressDialog progressDialog;
     /*Handler textHandler = new Handler() {
         public void handleMessage(String msg){
             TextView RespiRateView = (TextView) findViewById(R.id.RespiRateTextView);
@@ -39,12 +39,13 @@ public class RespiratoryRateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent measureRate = new Intent(RespiratoryRateActivity.this, RespiratoryRateService.class);
-                //ProgressDialog progressDialog = new ProgressDialog(getApplicationContext());
-                //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog = new ProgressDialog(getApplicationContext());
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 //progressDialog.setCancelable(false);
-                //progressDialog.setMessage("sd");
+                //progressDialog.setMessage("Measuring Respiratory Rate...");
                 //Log.d("as", getApplicationContext())
-                //progressDialog.show(RespiratoryRateActivity.this, "title", "message", false, true);
+                //progressDialog.setVisibility(View.VISIBLE);
+                progressDialog = progressDialog.show(RespiratoryRateActivity.this, "Please wait", "Measuring Respiratory Rate...", false, true);
                 startService(measureRate);
             }
         });
@@ -78,19 +79,21 @@ public class RespiratoryRateActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Display the respiratory rate
-
             String value = intent.getStringExtra("RRvalue");
-            //Log.d("value", value);
+
             if(value == null){
                 Log.d("Null"," null");
             }
+            //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            Log.d("as", String.valueOf(progressDialog.isShowing()));
+            progressDialog.dismiss();
+            Log.d("as", String.valueOf(progressDialog.isShowing()));
+
             TextView RespiRateView = (TextView) findViewById(R.id.RespiRateValTextView);
             RespiRateView.setText("RESPIRATORY RATE IS " + value);
             Button measure = (Button) findViewById(R.id.RespiRateBtn);
 
             measure.setText("MEASURE RESPIRATORY RATE AGAIN");
-            //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            //progressDialog.dismiss();
             //hideProgressDialogWithTitle();
         }
     };
