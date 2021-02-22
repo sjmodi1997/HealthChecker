@@ -1,9 +1,5 @@
 package com.example.health_checker;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,6 +15,9 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
@@ -33,50 +32,68 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class HeartRateActivity extends AppCompatActivity {
-    private Uri fileUri;
     private static final int VIDEO_CAPTURE = 101;
     CameraActivity cameraActivity;
     String folder_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Health-Checker/";
     String vid_name = "heart_rate.mp4";
     String mpjeg_name = "heart_rate.mjpeg";
     String avi_name = "heart_rate.avi";
+    DatabaseHandler db_handler;
+    String value;
+    Button upload;
+    private Uri fileUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_heart_rate);
-
+        upload = (Button) findViewById(R.id.heartRateUpData);
+        upload.setVisibility(View.INVISIBLE);
         configure_permissions();
 
         cameraActivity = new CameraActivity();
         Button measure = (Button) findViewById(R.id.heartRateBtn);
 
-        if(!hasCamera()) {
+        if (!hasCamera()) {
             measure.setEnabled(false);
         }
 
         measure.setOnClickListener(new View.OnClickListener() {
-           public void onClick(View v) {
-               //Intent measureRate = new Intent(HeartRateActivity.this, HeartRateService.class);
+            public void onClick(View v) {
+                //Intent measureRate = new Intent(HeartRateActivity.this, HeartRateService.class);
                 start_recording_intent();
 
-           }
+            }
         });
+
+        upload.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                TextView RespiRateView = (TextView) findViewById(R.id.RespiRateValTextView);
+                db_handler = new DatabaseHandler();
+                db_handler.create_database();
+                db_handler.create_table();
+
+                if (db_handler.upload_data(Integer.parseInt(value), "HeartRate")) {
+                    Toast.makeText(HeartRateActivity.this, "Data Uploaded", Toast.LENGTH_LONG).show();
+                    upload.setVisibility(View.INVISIBLE);
+                } else {
+                    Toast.makeText(HeartRateActivity.this, "Upload Failed", Toast.LENGTH_LONG).show();
+                    upload.setVisibility(View.VISIBLE);
+                }
+                //upload.setClickable(false);
+            }
+        });
+
     }
 
     private boolean hasCamera() {
         Log.d("a", Boolean.toString(getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)));
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)){
-            return true;
-        } else {
-            return false;
-        }
+        return getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
     }
 
-    public void start_recording_intent()
-    {
+    public void start_recording_intent() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT,5);
+        intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 45);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(intent, VIDEO_CAPTURE);
     }
@@ -97,10 +114,9 @@ public class HeartRateActivity extends AppCompatActivity {
 
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == VIDEO_CAPTURE) {
-            if (resultCode == RESULT_OK )
-            {
+            if (resultCode == RESULT_OK) {
                 // The rest of the code takes the video into the input stream and writes it to the location given in the internal storage
-                Log.d("uy","ok res");
+                Log.d("uy", "ok res");
                 File newfile;
                 //data.
                 AssetFileDescriptor videoAsset = null;
@@ -109,28 +125,27 @@ public class HeartRateActivity extends AppCompatActivity {
                 try {
 
                     videoAsset = getContentResolver().openAssetFileDescriptor(data.getData(), "r");
-                    Log.d("uy","vid ead");
+                    Log.d("uy", "vid ead");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
                 try {
                     inputStream = videoAsset.createInputStream();
-                    Log.d("uy","in stream");
+                    Log.d("uy", "in stream");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-                Log.d("uy","dir");
-                Log.d("uy",Environment.getExternalStorageDirectory().getAbsolutePath());
+                Log.d("uy", "dir");
+                Log.d("uy", Environment.getExternalStorageDirectory().getAbsolutePath());
                 File dir = new File(folder_path);
-                if (!dir.exists())
-                {
+                if (!dir.exists()) {
                     dir.mkdirs();
-                    Log.d("uy","mkdir");
+                    Log.d("uy", "mkdir");
                 }
 
                 newfile = new File(dir, vid_name);
-                Log.d("uy","hr");
+                Log.d("uy", "hr");
 
                 if (newfile.exists()) {
                     newfile.delete();
@@ -147,17 +162,13 @@ public class HeartRateActivity extends AppCompatActivity {
                 int len;
 
                 while (true) {
-                    try
-                    {
-                        Log.d("uy","try");
-                        if (((len = inputStream.read(buf)) > 0))
-                        {
-                            Log.d("uy","File write");
+                    try {
+                        Log.d("uy", "try");
+                        if (((len = inputStream.read(buf)) > 0)) {
+                            Log.d("uy", "File write");
                             outputStream.write(buf, 0, len);
-                        }
-                        else
-                        {
-                            Log.d("uy","else");
+                        } else {
+                            Log.d("uy", "else");
                             inputStream.close();
                             outputStream.close();
                             break;
@@ -188,8 +199,7 @@ public class HeartRateActivity extends AppCompatActivity {
 
 
     // Function to convert video to avi for processing the heart rate
-    public void convert_video_commands()
-    {
+    public void convert_video_commands() {
         //Loads the ffmpeg library
         FFmpeg ffmpeg = FFmpeg.getInstance(this);
         try {
@@ -227,14 +237,12 @@ public class HeartRateActivity extends AppCompatActivity {
             ffmpeg.execute(new String[]{"-i", folder_path + vid_name, "-vcodec", "mjpeg", folder_path + mpjeg_name}, new ExecuteBinaryResponseHandler() {
 
                 @Override
-                public void onStart()
-                {
+                public void onStart() {
                     //showProgressDialogWithTitle("Converting to AVI and Measuring Heart Rate");
                 }
 
                 @Override
-                public void onProgress(String message)
-                {
+                public void onProgress(String message) {
 
                 }
 
@@ -243,14 +251,12 @@ public class HeartRateActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onSuccess(String message)
-                {
+                public void onSuccess(String message) {
 
                 }
 
                 @Override
-                public void onFinish()
-                {
+                public void onFinish() {
 
                 }
             });
@@ -269,14 +275,12 @@ public class HeartRateActivity extends AppCompatActivity {
             ffmpeg.execute(new String[]{"-i", folder_path + mpjeg_name, "-vcodec", "mjpeg", folder_path + avi_name}, new ExecuteBinaryResponseHandler() {
 
                 @Override
-                public void onStart()
-                {
+                public void onStart() {
 
                 }
 
                 @Override
-                public void onProgress(String message)
-                {
+                public void onProgress(String message) {
 
                 }
 
@@ -285,30 +289,27 @@ public class HeartRateActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onSuccess(String message)
-                {
+                public void onSuccess(String message) {
 
 
                 }
 
                 @Override
-                public void onFinish()
-                {
+                public void onFinish() {
 
-                    while(true)
-                    {
+                    while (true) {
 
                         try {
                             // Calculate the heart rate
                             String heart_rate = cameraActivity.measure_heart_rate(folder_path, avi_name);
-                            if (heart_rate != "" )
-                            {
+                            if (heart_rate != "") {
                                 // Display the heart rate
                                 TextView textView = (TextView) findViewById(R.id.heartRateValTextView);
                                 Button button = (Button) findViewById(R.id.heartRateBtn);
-                                double hr = Double.parseDouble(heart_rate);
+                                value = heart_rate;
                                 textView.setText("HEART RATE IS: " + heart_rate + "\n");
                                 button.setText("MEASURE HEART RATE AGAIN");
+                                upload.setVisibility(View.VISIBLE);
                                 //hideProgressDialogWithTitle();
                                 break;
                             }
@@ -316,8 +317,6 @@ public class HeartRateActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
                     }
-
-
                 }
             });
 

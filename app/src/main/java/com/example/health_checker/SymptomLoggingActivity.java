@@ -1,11 +1,10 @@
 package com.example.health_checker;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SymptomLoggingActivity extends AppCompatActivity {
 
@@ -19,8 +18,5 @@ public class SymptomLoggingActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.symptoms_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spin.setAdapter(adapter);
-        //spin.setOnItemSelectedListener(this);
-
-
     }
 }
