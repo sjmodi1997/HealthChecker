@@ -16,10 +16,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class RespiratoryRateActivity extends AppCompatActivity {
-    private ProgressDialog progressDialog;
     DatabaseHandler db_handler;
     String value;
-
+    private ProgressDialog progressDialog;
     private final BroadcastReceiver msgReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -80,11 +79,10 @@ public class RespiratoryRateActivity extends AppCompatActivity {
                 db_handler.create_database();
                 db_handler.create_table();
 
-                if(db_handler.upload_data(Integer.parseInt(value), "RespiratoryRate")) {
+                if (db_handler.upload_data(Integer.parseInt(value), "RespiratoryRate")) {
                     Toast.makeText(RespiratoryRateActivity.this, "Data Uploaded", Toast.LENGTH_LONG).show();
                     upload.setVisibility(View.INVISIBLE);
-                }
-                else{
+                } else {
                     Toast.makeText(RespiratoryRateActivity.this, "Upload Failed", Toast.LENGTH_LONG).show();
                     upload.setVisibility(View.VISIBLE);
                 }

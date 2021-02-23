@@ -77,7 +77,6 @@ public class Algorithms {
     }
 }
 
-
 class SimpleMovingAverage {
     private final int period;
     Queue<Double> window = new LinkedList<Double>();

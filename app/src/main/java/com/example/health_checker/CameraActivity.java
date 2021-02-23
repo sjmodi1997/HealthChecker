@@ -35,7 +35,6 @@ public class CameraActivity {
 
                 List<Double> extremes = new ArrayList<Double>();
 
-
                 int video_length = (int) videoCapture.get(Videoio.CAP_PROP_FRAME_COUNT);
                 Log.d(TAG, "Video Length: " + video_length);
                 int frames_per_second = (int) videoCapture.get(Videoio.CAP_PROP_FPS);

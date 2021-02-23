@@ -40,7 +40,6 @@ public class DatabaseHandler {
         return mCursor.getCount() > 0;
     }
 
-
     public void create_table() {
 
         //if (check_table_exists()) {
