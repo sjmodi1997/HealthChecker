@@ -75,14 +75,14 @@ public class RespiratoryRateService extends Service implements SensorEventListen
 
         int mov_period = 50;
         Algorithms algos = new Algorithms();
-        List<Double> x_avg = algos.calculate_moving_avg(mov_period, x);
-        int peaksX = algos.count_zero_crossings_threshold(x_avg);
+        List<Double> x_avg = algos.calcMovingAvg(mov_period, x);
+        int peaksX = algos.countZerosThreshold(x_avg);
 
-        List<Double> y_avg = algos.calculate_moving_avg(mov_period, y);
-        int peaksY = algos.count_zero_crossings_threshold(y_avg);
+        List<Double> y_avg = algos.calcMovingAvg(mov_period, y);
+        int peaksY = algos.countZerosThreshold(y_avg);
 
-        List<Double> z_avg = algos.calculate_moving_avg(mov_period, z);
-        int peaksZ = algos.count_zero_crossings_threshold(z_avg);
+        List<Double> z_avg = algos.calcMovingAvg(mov_period, z);
+        int peaksZ = algos.countZerosThreshold(z_avg);
 
         Toast.makeText(this, "Measure: " + peaksY / 2, Toast.LENGTH_LONG).show();
         try {

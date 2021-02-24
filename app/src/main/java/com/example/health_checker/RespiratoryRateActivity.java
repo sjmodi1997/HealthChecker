@@ -28,21 +28,16 @@ public class RespiratoryRateActivity extends AppCompatActivity {
             if (value == null) {
                 Log.d("Null", " null");
             }
-            //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            Log.d("as", String.valueOf(progressDialog.isShowing()));
             progressDialog.dismiss();
-            Log.d("as", String.valueOf(progressDialog.isShowing()));
 
-            TextView RespiRateView = (TextView) findViewById(R.id.RespiRateValTextView);
+            TextView RespiRateView = findViewById(R.id.RespiRateValTextView);
             RespiRateView.setText("RESPIRATORY RATE IS " + value);
-            Button measure = (Button) findViewById(R.id.RespiRateBtn);
-            Button upload = (Button) findViewById(R.id.RespiRateUpData);
+            Button measure = findViewById(R.id.RespiRateBtn);
+            Button upload = findViewById(R.id.RespiRateUpData);
 
-            //upload.setClickable(true);
             upload.setVisibility(View.VISIBLE);
 
             measure.setText("MEASURE RESPIRATORY RATE AGAIN");
-            //hideProgressDialogWithTitle();
         }
     };
 
@@ -52,9 +47,8 @@ public class RespiratoryRateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_respiratory_rate);
 
-        Button measure = (Button) findViewById(R.id.RespiRateBtn);
-        Button upload = (Button) findViewById(R.id.RespiRateUpData);
-        //upload.setClickable(false);
+        Button measure = findViewById(R.id.RespiRateBtn);
+        Button upload = findViewById(R.id.RespiRateUpData);
         upload.setVisibility(View.INVISIBLE);
 
         measure.setOnClickListener(new View.OnClickListener() {
@@ -63,10 +57,6 @@ public class RespiratoryRateActivity extends AppCompatActivity {
                 Intent measureRate = new Intent(RespiratoryRateActivity.this, RespiratoryRateService.class);
                 progressDialog = new ProgressDialog(getApplicationContext());
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                //progressDialog.setCancelable(false);
-                //progressDialog.setMessage("Measuring Respiratory Rate...");
-                //Log.d("as", getApplicationContext())
-                //progressDialog.setVisibility(View.VISIBLE);
                 progressDialog = ProgressDialog.show(RespiratoryRateActivity.this, "Please wait", "Measuring Respiratory Rate...", false, false);
                 startService(measureRate);
             }
@@ -74,7 +64,7 @@ public class RespiratoryRateActivity extends AppCompatActivity {
 
         upload.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                TextView RespiRateView = (TextView) findViewById(R.id.RespiRateValTextView);
+                TextView RespiRateView = findViewById(R.id.RespiRateValTextView);
                 db_handler = new DatabaseHandler();
                 db_handler.create_logging_database();
                 db_handler.create_logging_table();
@@ -97,18 +87,6 @@ public class RespiratoryRateActivity extends AppCompatActivity {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(msgReceiver, new IntentFilter("Respiratory Rate"));
     }
-
-    /*private void showProgressDialogWithTitle(String substring) {
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setCancelable(false);
-        progressDialog.setMessage(substring);
-        progressDialog.show();
-    }
-
-    private void hideProgressDialogWithTitle() {
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.dismiss();
-    }*/
 
     protected void onPause() {
         super.onPause();
