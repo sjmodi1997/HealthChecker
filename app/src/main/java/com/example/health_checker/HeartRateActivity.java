@@ -1,6 +1,7 @@
 package com.example.health_checker;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
@@ -42,6 +43,7 @@ public class HeartRateActivity extends AppCompatActivity {
     String value;
     Button upload;
     private Uri fileUri;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,9 @@ public class HeartRateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //Intent measureRate = new Intent(HeartRateActivity.this, HeartRateService.class);
                 start_recording_intent();
-
+                progressDialog = new ProgressDialog(getApplicationContext());
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog = ProgressDialog.show(HeartRateActivity.this, "Please wait", "Measuring Heart Rate...", false, false);
             }
         });
 
@@ -70,10 +74,10 @@ public class HeartRateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 TextView RespiRateView = (TextView) findViewById(R.id.RespiRateValTextView);
                 db_handler = new DatabaseHandler();
-                db_handler.create_database();
-                db_handler.create_table();
+                db_handler.create_logging_database();
+                db_handler.create_logging_table();
 
-                if (db_handler.upload_data(Integer.parseInt(value), "HeartRate")) {
+                if (db_handler.upload_logging_data(Integer.parseInt(value), "HeartRate")) {
                     Toast.makeText(HeartRateActivity.this, "Data Uploaded", Toast.LENGTH_LONG).show();
                     upload.setVisibility(View.INVISIBLE);
                 } else {
@@ -309,6 +313,7 @@ public class HeartRateActivity extends AppCompatActivity {
                                 value = heart_rate;
                                 textView.setText("HEART RATE IS: " + heart_rate + "\n");
                                 button.setText("MEASURE HEART RATE AGAIN");
+                                progressDialog.dismiss();
                                 upload.setVisibility(View.VISIBLE);
                                 //hideProgressDialogWithTitle();
                                 break;
