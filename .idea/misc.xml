@@ -4,8 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/round_button.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_heart_rate.xml" value="0.15520833333333334" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.15520833333333334" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_respiratory_rate.xml" value="0.15520833333333334" />
         <entry key="app/src/main/res/layout/activity_symptom_logging.xml" value="0.15520833333333334" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
