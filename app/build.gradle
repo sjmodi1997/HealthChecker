@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdk 28
     buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.example.health_checker"
-        minSdkVersion 16
-        targetSdkVersion 28
+        minSdk 16
+        targetSdk 28
         versionCode 1
         versionName "1.0"
 

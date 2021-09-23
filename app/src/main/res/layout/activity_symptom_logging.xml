@@ -21,13 +21,15 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.178" />
 
+
     <Spinner
         android:id="@+id/symSpinner"
         android:layout_width="324dp"
         android:layout_height="39dp"
         android:layout_marginTop="128dp"
-        android:background="#EBEEF6"
-        android:popupBackground="#EBEEF6"
+        android:background="@color/purple_200"
+        android:popupBackground="@color/purple_200"
+        android:textColor="#ffffff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.563"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,23 +40,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
+        android:background="@drawable/round_button"
         android:text="Log Data"
-        app:backgroundTint="@color/black"
+        app:backgroundTint="@color/round_gradient_button_end_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/symRatingBar" />
+        app:layout_constraintTop_toBottomOf="@+id/symRatingBar"
+        android:textColor="#ffffff" />
 
     <RatingBar
         android:id="@+id/symRatingBar"
+        style="@android:style/Widget.DeviceDefault.Light.RatingBar"
         android:layout_width="236dp"
         android:layout_height="58dp"
         android:layout_marginTop="44dp"
-        android:background="#EBEEF6"
+        android:background="@color/purple_200"
         android:numStars="5"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/symSpinner" />
+        app:layout_constraintTop_toBottomOf="@+id/symSpinner"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

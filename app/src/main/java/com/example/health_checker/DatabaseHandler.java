@@ -14,7 +14,7 @@ import static java.lang.Math.abs;
 public class DatabaseHandler {
     final String loggingTableName = "logs", dataTable = "DataTable";
     String folder_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Health-Checker/";
-    private String databaseName = "shah";
+    private String databaseName = "Doshi";
     private SQLiteDatabase db;
     String[] columnsList = {
             "Fever",
