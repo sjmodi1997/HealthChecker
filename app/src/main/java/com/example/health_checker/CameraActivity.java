@@ -2,6 +2,8 @@ package com.example.health_checker;
 
 // This class computes the Heart rate
 
+import android.util.Log;
+
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.videoio.VideoCapture;
@@ -32,7 +34,6 @@ public class CameraActivity {
 
                 int video_length = (int) videoCapture.get(Videoio.CAP_PROP_FRAME_COUNT);
                 int fps = (int) videoCapture.get(Videoio.CAP_PROP_FPS);
-
 
                 videoCapture.read(current_frame);
                 for (int k = 0; k < video_length - 1; k++) {
