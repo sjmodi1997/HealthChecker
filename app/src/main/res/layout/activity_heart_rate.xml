@@ -22,9 +22,11 @@
         android:layout_width="261dp"
         android:layout_height="43dp"
         android:layout_marginBottom="88dp"
+        android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:text="Please put your finger on the rear camera "
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:typeface="normal"
         app:layout_constraintBottom_toTopOf="@+id/heartRateBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

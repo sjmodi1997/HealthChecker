@@ -273,7 +273,7 @@ public class HeartRateActivity extends AppCompatActivity {
                     while (true) {
 
                         try {
-                            String heart_rate = cameraActivity.measure_heart_rate(folderPath, aviName);
+                            String heart_rate = cameraActivity.measureHeartRate(folderPath, aviName);
                             if (heart_rate != "") {
                                 TextView textView = findViewById(R.id.heartRateValTextView);
                                 Button button = findViewById(R.id.heartRateBtn);

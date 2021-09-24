@@ -16,7 +16,8 @@ public class DatabaseHandler {
     final String loggingTableName = "logs", dataTable = "DataTable";
     final String TAG = "DB";
     final String FAIL_TAG = "FAIL";
-    String folder_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Health-Checker/";
+    String folder_path = "/data/data/com.example.health_checker/databases";
+    //String folder_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Health-Checker/";
     private String databaseName = "HealthHistory";
     private SQLiteDatabase db;
     String[] columnsList = {
@@ -26,7 +27,7 @@ public class DatabaseHandler {
             "Feeling Tired",
             "Muscle Ache",
             "Headache",
-            "Loss of Smell/Taste",
+            "Loss of Smell or Taste",
             "Sore throat",
             "Nausea",
             "Diarrhea",
@@ -60,8 +61,9 @@ public class DatabaseHandler {
             File dir = new File(folder_path);
             if (!dir.exists()) {
                 dir.mkdirs();
-                Log.d(TAG, "Creating a new Directory");
+                Log.d(TAG, "Creating a new Logging Directory :: " + dir);
             }
+            Log.d(TAG, "Creating a new Logging Database :: " + folder_path + databaseName);
             db = SQLiteDatabase.openOrCreateDatabase(folder_path + databaseName, null);
             db.beginTransaction();
             db.setTransactionSuccessful();
@@ -79,9 +81,9 @@ public class DatabaseHandler {
             File dir = new File(folder_path);
             if (!dir.exists()) {
                 dir.mkdirs();
-                Log.d(TAG, "Creating directory");
+                Log.d(TAG, "Creating a new Directory :: " + dir);
             }
-
+            Log.d(TAG, "Creating a new Database :: " + folder_path + databaseName);
             db = SQLiteDatabase.openOrCreateDatabase(folder_path + databaseName, null);
             db.beginTransaction();
             db.setTransactionSuccessful();

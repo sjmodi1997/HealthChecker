@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
         img.setImageResource(R.drawable.logo_image);
 
         //Call Respiratory Rate Activity
-        Button RespBtn = (Button) findViewById(R.id.MeasureRespiratoryButton);
+        Button btnResp = (Button) findViewById(R.id.MeasureRespiratoryButton);
 
-        RespBtn.setOnClickListener(new View.OnClickListener() {
+        btnResp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent respiInt = new Intent(MainActivity.this, RespiratoryRateActivity.class);
@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Call Heart Rate Activity
-        Button HeartBtn = (Button) findViewById(R.id.MeasureHeartRateButton);
+        Button btnHeartRate = (Button) findViewById(R.id.MeasureHeartRateButton);
 
-        HeartBtn.setOnClickListener(new View.OnClickListener() {
+        btnHeartRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent heartInt = new Intent(MainActivity.this, HeartRateActivity.class);
@@ -56,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         //Call Symptom Logging Activity
-        Button SymBtn = (Button) findViewById(R.id.ReportSymptomsButton);
+        Button btnSymptom = (Button) findViewById(R.id.ReportSymptomsButton);
 
-        SymBtn.setOnClickListener(new View.OnClickListener() {
+        btnSymptom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent symInt = new Intent(MainActivity.this, SymptomLoggingActivity.class);
@@ -66,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton saveBtn = (FloatingActionButton) findViewById(R.id.SaveDataButton);
+        FloatingActionButton btnSaveData = (FloatingActionButton) findViewById(R.id.SaveDataButton);
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
+        btnSaveData.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 db = new DatabaseHandler();
                 db.createDB();
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 if(true) {
                     if(db.insertRow())
                         Toast.makeText(MainActivity.this, "Data Uploaded Sucessfully", Toast.LENGTH_LONG).show();
-                        saveBtn.setVisibility(View.INVISIBLE);
+                        btnSaveData.setVisibility(View.INVISIBLE);
                 } else {
                     Toast.makeText(MainActivity.this, "Measured symptoms long ago try measuring again", Toast.LENGTH_LONG).show();
                 }

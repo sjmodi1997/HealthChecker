@@ -42,7 +42,9 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
 
         Spinner spin = (Spinner) findViewById(R.id.symSpinner);
 
-        Button upload = (Button) findViewById(R.id.symUpData);
+        Button uploadButton = (Button) findViewById(R.id.symUpData);
+        uploadButton.setActivated(false);
+
         hash = new HashMap<String, Float>();
         for(int i = 0; i < symptomsList.length; i++){
             hash.put(symptomsList[i], (float) 0.0);
@@ -64,11 +66,25 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
                 value = ratingBar.getRating();
                 text = spin.getSelectedItem().toString();
                 hash.put(text, value);
+                int cnt = 0;
+                for (Float val : hash.values()) {
+                    if(val!=0.0){
+                        cnt++;
+                    }
+                }
+                Log.d("TAG", "Size of updated map :: " + cnt);
+                if (cnt == hash.size()) {
+                    uploadButton.setActivated(true);
+                }
             }
         });
 
-        upload.setOnClickListener(new View.OnClickListener() {
+        uploadButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                if(!uploadButton.isActivated()) {
+                    Toast.makeText(SymptomLoggingActivity.this, "Please fill all the Symptom", Toast.LENGTH_LONG).show();
+                    return;
+                }
                 TextView RespiRateView = (TextView) findViewById(R.id.RespiRateValTextView);
                 db_handler = new DatabaseHandler();
                 db_handler.createLoggingDatabase();
@@ -81,6 +97,16 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
                 if(!status){
                     Log.d("Failed","Data Upload Failed");
                     Toast.makeText(SymptomLoggingActivity.this, "Log Failed", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    Log.d("Passed","Data Uploaded Successfully!!");
+                    Toast.makeText(SymptomLoggingActivity.this, "Log successfully!", Toast.LENGTH_LONG).show();
+                    try {
+                        wait(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    finish();
                 }
             }
         });
