@@ -8,13 +8,16 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.Queue;
 
 import static java.lang.Math.abs;
 
 public class DatabaseHandler {
     final String loggingTableName = "logs", dataTable = "DataTable";
+    final String TAG = "DB";
+    final String FAIL_TAG = "FAIL";
     String folder_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Health-Checker/";
-    private String databaseName = "Doshi";
+    private String databaseName = "HealthHistory";
     private SQLiteDatabase db;
     String[] columnsList = {
             "Fever",
@@ -23,7 +26,7 @@ public class DatabaseHandler {
             "Feeling Tired",
             "Muscle Ache",
             "Headache",
-            "Loss of Smell or Taste",
+            "Loss of Smell/Taste",
             "Sore throat",
             "Nausea",
             "Diarrhea",
@@ -31,65 +34,79 @@ public class DatabaseHandler {
             "HeartRate"
     };
 
+    /*
+        run the query and catch the error if there are any
+     */
+    private void runQuery(String query) {
+        if(query.length()==0){
+            Log.d(TAG, "Query is Empty");
+            return;
+        }
+        try {
+            db.beginTransaction();
+            Log.d(TAG, "Running the Query :: " + query);
+            db.execSQL(query);
+            db.setTransactionSuccessful();
+        } catch (SQLiteException e) {
+            Log.d(FAIL_TAG, e.getMessage());
+        } finally {
+            db.endTransaction();
+        }
+        return;
+    }
 
-    public void create_logging_database() {
+    public void createLoggingDatabase() {
         try {
             File dir = new File(folder_path);
             if (!dir.exists()) {
                 dir.mkdirs();
-                Log.d("uy", "mkdir");
+                Log.d(TAG, "Creating a new Directory");
+            }
+            db = SQLiteDatabase.openOrCreateDatabase(folder_path + databaseName, null);
+            db.beginTransaction();
+            db.setTransactionSuccessful();
+        } catch (SQLiteException e) {
+            Log.d(FAIL_TAG, e.getMessage());
+        } finally {
+            db.endTransaction();
+        }
+    }
+    /*
+        Create a new Database
+     */
+    public void createDB() {
+        try {
+            File dir = new File(folder_path);
+            if (!dir.exists()) {
+                dir.mkdirs();
+                Log.d(TAG, "Creating directory");
             }
 
             db = SQLiteDatabase.openOrCreateDatabase(folder_path + databaseName, null);
             db.beginTransaction();
             db.setTransactionSuccessful();
         } catch (SQLiteException e) {
-            Log.d("DB", e.getMessage());
+            Log.d(TAG, e.getMessage());
         } finally {
             db.endTransaction();
         }
     }
 
-    public void create_database() {
-        try {
-            File dir = new File(folder_path);
-            if (!dir.exists()) {
-                dir.mkdirs();
-                Log.d("uy", "mkdir");
-            }
+    /*
+        Creates a new Logging Table
+     */
+    public void createLoggingTable() {
 
-            db = SQLiteDatabase.openOrCreateDatabase(folder_path + databaseName, null);
-            db.beginTransaction();
-            db.setTransactionSuccessful();
-        } catch (SQLiteException e) {
-            Log.d("DB", e.getMessage());
-        } finally {
-            db.endTransaction();
-        }
-    }
-
-
-    public void create_logging_table() {
-        try {
-            db.beginTransaction();
-            String query = "CREATE TABLE IF NOT EXISTS " + loggingTableName + "("
+        String query = "CREATE TABLE IF NOT EXISTS " + loggingTableName + "("
                     + "time TEXT PRIMARY KEY, "
                     + "value REAL NOT NULL, "
                     + "type TEXT NOT NULL);";
-            db.execSQL(query);
-            db.setTransactionSuccessful();
-
-        } catch (SQLiteException e) {
-            Log.d("FAIL", e.getMessage());
-        } finally {
-            db.endTransaction();
-        }
+        runQuery(query);
+        return;
     }
 
-    public void create_table() {
-        try {
-            db.beginTransaction();
-            String make_table_query = "CREATE TABLE IF NOT EXISTS " + dataTable + "("
+    public void createTable() {
+        String query = "CREATE TABLE IF NOT EXISTS " + dataTable + "("
                     + "recID integer PRIMARY KEY autoincrement, "
                     + "Fever real, "
                     + "Cough real, "
@@ -103,14 +120,8 @@ public class DatabaseHandler {
                     + "Diarrhea real, "
                     + "HeartRate real, "
                     + "RespiratoryRate real);";
-            db.execSQL(make_table_query);
-            db.setTransactionSuccessful();
-        } catch (SQLiteException e) {
-
-        } finally {
-            db.endTransaction();
-        }
-
+        runQuery(query);
+        return;
     }
 
     public boolean isComplete() {
@@ -162,31 +173,24 @@ public class DatabaseHandler {
     }
 
 
-    public boolean upload_logging_data(double value, String type) {
-        try {
-            db.beginTransaction();
-
-            String
-                    query = "INSERT into " + loggingTableName
+    public boolean uploadLoggingData(double value, String type) {
+        String query = "INSERT into " + loggingTableName
                     + "(time, value, type) values ("
                     + "\"" + System.currentTimeMillis() + "\"" + ','
                     + value + ',' + "\"" + type + "\"" + ");";
-            db.execSQL(query);
-            db.setTransactionSuccessful();
-        } catch (SQLiteException e) {
-            return false;
-        } finally {
-            db.endTransaction();
-            return true;
+        try{
+            runQuery(query);
         }
+        catch (Exception e){
+            return false;
+        }
+        return true;
     }
 
-    public boolean insert_row(){
+    public boolean insertRow(){
         float values[] = new float[12];
 
         try {
-
-
             db.beginTransaction();
             for(int i = 0; i < columnsList.length; i++) {
                 String query = "select * from "
@@ -210,17 +214,12 @@ public class DatabaseHandler {
                     + values[9] + "," + values[10] + "," + values[11] + ");";
             db.execSQL(query);
             db.setTransactionSuccessful();
-
-
         } catch (SQLiteException e) {
             e.printStackTrace();
             return false;
         } finally {
             db.endTransaction();
         }
-
-
         return true;
     }
-
 }

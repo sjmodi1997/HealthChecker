@@ -74,10 +74,10 @@ public class HeartRateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 TextView RespiRateView = findViewById(R.id.RespiRateValTextView);
                 dbHandler = new DatabaseHandler();
-                dbHandler.create_logging_database();
-                dbHandler.create_logging_table();
+                dbHandler.createLoggingDatabase();
+                dbHandler.createLoggingTable();
 
-                if (dbHandler.upload_logging_data(Integer.parseInt(value), "HeartRate")) {
+                if (dbHandler.uploadLoggingData(Integer.parseInt(value), "HeartRate")) {
                     Toast.makeText(HeartRateActivity.this, "Data Uploaded", Toast.LENGTH_LONG).show();
                     upload.setVisibility(View.INVISIBLE);
                 } else {

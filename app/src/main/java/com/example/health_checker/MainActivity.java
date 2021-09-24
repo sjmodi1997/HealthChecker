@@ -71,12 +71,12 @@ public class MainActivity extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 db = new DatabaseHandler();
-                db.create_database();
-                db.create_table();
+                db.createDB();
+                db.createTable();
 
                 //db.isComplete()
                 if(true) {
-                    if(db.insert_row())
+                    if(db.insertRow())
                         Toast.makeText(MainActivity.this, "Data Uploaded Sucessfully", Toast.LENGTH_LONG).show();
                         saveBtn.setVisibility(View.INVISIBLE);
                 } else {

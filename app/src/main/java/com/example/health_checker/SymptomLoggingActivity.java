@@ -71,12 +71,12 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
             public void onClick(View v) {
                 TextView RespiRateView = (TextView) findViewById(R.id.RespiRateValTextView);
                 db_handler = new DatabaseHandler();
-                db_handler.create_logging_database();
-                db_handler.create_logging_table();
+                db_handler.createLoggingDatabase();
+                db_handler.createLoggingTable();
                 boolean status = true;
 
                 for(int i = 0; i < symptomsList.length; i++){
-                    status = status ^ db_handler.upload_logging_data(hash.get(symptomsList[i]), symptomsList[i]);
+                    status = status ^ db_handler.uploadLoggingData(hash.get(symptomsList[i]), symptomsList[i]);
                 }
                 if(!status){
                     Log.d("Failed","Data Upload Failed");

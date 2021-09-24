@@ -66,10 +66,10 @@ public class RespiratoryRateActivity extends AppCompatActivity {
             public void onClick(View v) {
                 TextView RespiRateView = findViewById(R.id.RespiRateValTextView);
                 db_handler = new DatabaseHandler();
-                db_handler.create_logging_database();
-                db_handler.create_logging_table();
+                db_handler.createLoggingDatabase();
+                db_handler.createLoggingTable();
 
-                if (db_handler.upload_logging_data(Integer.parseInt(value), "RespiratoryRate")) {
+                if (db_handler.uploadLoggingData(Integer.parseInt(value), "RespiratoryRate")) {
                     Toast.makeText(RespiratoryRateActivity.this, "Data Uploaded", Toast.LENGTH_LONG).show();
                     upload.setVisibility(View.INVISIBLE);
                 } else {
