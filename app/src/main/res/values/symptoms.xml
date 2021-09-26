@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="symptoms_array">
+        <item>Breathing Problem</item>
         <item>Fever</item>
         <item>Cough</item>
-        <item>Shortness of Breath</item>
-        <item>Feeling Tired</item>
-        <item>Muscle Ache</item>
         <item>Headache</item>
         <item>Loss of Smell or Taste</item>
         <item>Sore throat</item>
-        <item>Nausea</item>
-        <item>Diarrhea</item>
     </string-array>
 </resources>

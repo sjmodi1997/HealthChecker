@@ -21,16 +21,12 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
     private DatabaseHandler db_handler;
     private String text;
     private String [] symptomsList = {
+            "Breathing Problem",
             "Fever",
             "Cough",
-            "Shortness of Breath",
-            "Feeling Tired",
-            "Muscle Ache",
             "Headache",
             "Loss of Smell or Taste",
-            "Sore throat",
-            "Nausea",
-            "Diarrhea",
+            "Sore throat"
     };
     private HashMap<String, Float> hash;
     private RatingBar ratingBar;
@@ -102,7 +98,9 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
                     Log.d("Passed","Data Uploaded Successfully!!");
                     Toast.makeText(SymptomLoggingActivity.this, "Log successfully!", Toast.LENGTH_LONG).show();
                     try {
-                        wait(2000);
+                        synchronized (this) {
+                            wait(1000);
+                        }
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

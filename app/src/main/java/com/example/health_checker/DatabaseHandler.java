@@ -16,21 +16,17 @@ public class DatabaseHandler {
     final String loggingTableName = "logs", dataTable = "DataTable";
     final String TAG = "DB";
     final String FAIL_TAG = "FAIL";
-    String folder_path = "/data/data/com.example.health_checker/databases";
+    String folder_path = "/storage/emulated/0/Health-Checker/";
     //String folder_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Health-Checker/";
     private String databaseName = "HealthHistory";
     private SQLiteDatabase db;
     String[] columnsList = {
+            "Breathing Problem",
             "Fever",
             "Cough",
-            "Shortness of Breath",
-            "Feeling Tired",
-            "Muscle Ache",
             "Headache",
             "Loss of Smell or Taste",
             "Sore throat",
-            "Nausea",
-            "Diarrhea",
             "RespiratoryRate",
             "HeartRate"
     };
@@ -109,71 +105,18 @@ public class DatabaseHandler {
 
     public void createTable() {
         String query = "CREATE TABLE IF NOT EXISTS " + dataTable + "("
-                    + "recID integer PRIMARY KEY autoincrement, "
-                    + "Fever real, "
-                    + "Cough real, "
-                    + "Shortness_of_Breath  real, "
-                    + "Feeling_Tired real, "
-                    + "Muscle_Ache real, "
-                    + "Headache real, "
-                    + "Loss_of_Smell_or_Taste real, "
-                    + "Sore_throat real, "
-                    + "Nausea real, "
-                    + "Diarrhea real, "
-                    + "HeartRate real, "
-                    + "RespiratoryRate real);";
+                + "recID integer PRIMARY KEY autoincrement, "
+                + "Shortness_of_Breath  real, "
+                + "Fever real, "
+                + "Cough real, "
+                + "Headache real, "
+                + "Loss_of_Smell_or_Taste real, "
+                + "Sore_throat real, "
+                + "HeartRate real, "
+                + "RespiratoryRate real);";
         runQuery(query);
         return;
     }
-
-    public boolean isComplete() {
-        try {
-            db.beginTransaction();
-            String query = "select * from "
-                    + loggingTableName
-                    + " where type = \"RespiratoryRate\" Order By time DESC LIMIT 1;";
-            Cursor c = db.rawQuery(query, null);
-            if(c.getCount() < 1){
-                return false;
-            }
-            c.moveToLast();
-            String RRtime = c.getString(c.getColumnIndex("time"));
-
-            query = "select * from "
-                    + loggingTableName
-                    + " where type = \"HeartRate\" Order By time DESC LIMIT 1;";
-            //c = null;
-            c = db.rawQuery(query, null);
-            if(c.getCount() < 1){
-                return false;
-            }
-            c.moveToLast();
-            String HRtime = c.getString(c.getColumnIndex("time"));
-
-            query = "select * from "
-                    + loggingTableName
-                    + " where type = \"Fever\" Order By time DESC LIMIT 1;";
-            //c = null;
-            c = db.rawQuery(query, null);
-            if(c.getCount() < 1){
-                return false;
-            }
-            c.moveToLast();
-            String Fevertime = c.getString(c.getColumnIndex("time"));
-
-            if(abs(Float.parseFloat(RRtime) - Float.parseFloat(Fevertime)) > 3000000 | Math.abs(Float.parseFloat(RRtime) - Float.parseFloat(HRtime)) > 3000000) {
-                return false;
-            }
-
-        } catch (SQLiteException e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            db.endTransaction();
-        }
-        return true;
-    }
-
 
     public boolean uploadLoggingData(double value, String type) {
         String query = "INSERT into " + loggingTableName
@@ -208,12 +151,11 @@ public class DatabaseHandler {
 
             }
             String query = "INSERT into " + dataTable
-                    + " (Fever, Cough, Shortness_of_Breath, Feeling_Tired, Muscle_Ache, "
-                    + "Headache, Loss_of_Smell_or_Taste, Sore_throat, Nausea, Diarrhea,"
+                    + " (Shortness_of_Breath, Fever, Cough ,"
+                    + " Headache, Loss_of_Smell_or_Taste, Sore_throat,"
                     + " RespiratoryRate, HeartRate) values (" + values[0] + ","
                     + values[1] + "," + values[2] + "," + values[3] + "," + values[4] + ","
-                    + values[5] + "," + values[6] + "," + values[7] + "," + values[8] + ","
-                    + values[9] + "," + values[10] + "," + values[11] + ");";
+                    + values[5] + "," + values[6] + "," + values[7] + "," + values[8] + ");";
             db.execSQL(query);
             db.setTransactionSuccessful();
         } catch (SQLiteException e) {
