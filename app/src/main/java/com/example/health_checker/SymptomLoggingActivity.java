@@ -17,9 +17,9 @@ import java.util.HashMap;
 
 public class SymptomLoggingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private float value;
+    private float rate;
     private DatabaseHandler db_handler;
-    private String text;
+    private String symptomName;
     private String [] symptomsList = {
             "Breathing Problem",
             "Fever",
@@ -28,7 +28,7 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
             "Loss of Smell or Taste",
             "Sore throat"
     };
-    private HashMap<String, Float> hash;
+    private HashMap<String, Float> mapSymptomToRating;
     private RatingBar ratingBar;
 
     @Override
@@ -41,9 +41,9 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
         Button uploadButton = (Button) findViewById(R.id.symUpData);
         uploadButton.setActivated(false);
 
-        hash = new HashMap<String, Float>();
+        mapSymptomToRating = new HashMap<String, Float>();
         for(int i = 0; i < symptomsList.length; i++){
-            hash.put(symptomsList[i], (float) 0.0);
+            mapSymptomToRating.put(symptomsList[i], (float) 0.0);
         }
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.symptoms_array, android.R.layout.simple_spinner_item);
@@ -56,20 +56,19 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
 
 
             @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating,
-                                        boolean fromUser) {
-                //float v = ratingBar.getRating() * 10;
-                value = ratingBar.getRating();
-                text = spin.getSelectedItem().toString();
-                hash.put(text, value);
-                int cnt = 0;
-                for (Float val : hash.values()) {
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                rate = ratingBar.getRating();
+                symptomName = spin.getSelectedItem().toString();
+                mapSymptomToRating.put(symptomName, rate);
+                int nonEmptyRating = 0;
+                for (Float val : mapSymptomToRating.values()) {
                     if(val!=0.0){
-                        cnt++;
+                        nonEmptyRating++;
                     }
                 }
-                Log.d("TAG", "Size of updated map :: " + cnt);
-                if (cnt == hash.size()) {
+                Log.d("TAG", "Size of updated map :: " + nonEmptyRating);
+                // Make sure user selects all the symptoms
+                if (nonEmptyRating == mapSymptomToRating.size()) {
                     uploadButton.setActivated(true);
                 }
             }
@@ -88,7 +87,7 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
                 boolean status = true;
 
                 for(int i = 0; i < symptomsList.length; i++){
-                    status = status ^ db_handler.uploadLoggingData(hash.get(symptomsList[i]), symptomsList[i]);
+                    status = status ^ db_handler.uploadLoggingData(mapSymptomToRating.get(symptomsList[i]), symptomsList[i]);
                 }
                 if(!status){
                     Log.d("Failed","Data Upload Failed");
@@ -97,6 +96,7 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
                 else {
                     Log.d("Passed","Data Uploaded Successfully!!");
                     Toast.makeText(SymptomLoggingActivity.this, "Log successfully!", Toast.LENGTH_LONG).show();
+                    // Waiting for 1 sec
                     try {
                         synchronized (this) {
                             wait(1000);
@@ -114,7 +114,7 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String selected_item = (String) adapterView.getItemAtPosition(i);
-        Float rating = hash.get(selected_item);
+        Float rating = mapSymptomToRating.get(selected_item);
         ratingBar.setRating(rating);
     }
 
