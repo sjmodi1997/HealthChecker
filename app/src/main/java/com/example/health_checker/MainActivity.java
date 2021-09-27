@@ -14,8 +14,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.opencv.android.OpenCVLoader;
 
+/**
+ *  Main Activity Class
+ */
 public class MainActivity extends AppCompatActivity {
-    private DatabaseHandler db;
+
+    private DatabaseHandler dbHandler;
 
     static {
         if (OpenCVLoader.initDebug()) {
@@ -25,13 +29,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Main Method
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ImageView img = (ImageView) findViewById(R.id.logoImageView);
-        img.setImageResource(R.drawable.logo_image);
+        ImageView imgView = (ImageView) findViewById(R.id.logoImageView);
+        imgView.setImageResource(R.drawable.logo_image);
 
         //Call Respiratory Rate Activity
         Button btnResp = (Button) findViewById(R.id.MeasureRespiratoryButton);
@@ -70,13 +78,12 @@ public class MainActivity extends AppCompatActivity {
 
         btnSaveData.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                db = new DatabaseHandler();
-                db.createDB();
-                db.createTable();
-
-                //db.isComplete()
+                dbHandler = new DatabaseHandler();
+                dbHandler.createDB();
+                dbHandler.createTable();
+                
                 if(true) {
-                    if(db.insertRow())
+                    if(dbHandler.insertRow())
                         Toast.makeText(MainActivity.this, "Data Uploaded Sucessfully", Toast.LENGTH_LONG).show();
                         btnSaveData.setVisibility(View.INVISIBLE);
                 } else {

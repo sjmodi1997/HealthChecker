@@ -14,17 +14,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class for Camera Activity
+ */
 public class CameraActivity {
     public static String TAG = "Debug";
-    Algorithms algorithms = new Algorithms();
+    Algorithms algorithms;
 
-    // Function to measure the heart rate
+    public CameraActivity() {
+        algorithms = new Algorithms();
+    }
+
+    /**
+     * Main function to measure HeartRate
+     * @param videoPath
+     * @param videoName
+     * @return
+     * @throws IOException
+     */
     public String measureHeartRate(String videoPath, String videoName) throws IOException {
         VideoCapture videoCapture = new VideoCapture();
         Log.i(TAG, "Path :: " + videoPath+videoName);
+
         if (new File(videoPath + videoName).exists()) {
             Log.d(TAG,"File found!");
             videoCapture.open(videoPath + videoName);
+
             if (videoCapture.isOpened()) {
                 Log.d(TAG,"Video Opened!");
                 List<Double> extremes = new ArrayList<Double>();
@@ -45,6 +60,7 @@ public class CameraActivity {
                     next_frame.copyTo(current_frame);
                     list.add(Core.mean(diff_frame).val[0] + Core.mean(diff_frame).val[1] + Core.mean(diff_frame).val[2]);
                 }
+
                 Log.d(TAG, "Processing Heart-Rate :: 50%...");
                 for (int i = 0; i < (list.size() / 5) - 1; i++) {
                     List<Double> sublist = list.subList(i * 5, (i + 1) * 5);
@@ -57,25 +73,23 @@ public class CameraActivity {
                 }
 
                 int mov_period = 50;
-
                 List<Double> avg_data = algorithms.calcMovingAvg(mov_period, new_list);
-
                 Log.d(TAG, "Processing Heart-Rate :: 75%...");
 
                 int peakCounts = algorithms.countZeroCrossings(avg_data);
-
                 Log.i(TAG, "Processing Heart-Rate :: 99%...");
-
                 double fpsSec = (video_length / fps);
                 double count_heart_rate = (peakCounts / 2) * (60) / fpsSec;
 
                 return "" + (int) count_heart_rate;
 
-            } else {
+            }
+            else {
                 Log.d(TAG, "Not able to open file!");
                 return "";
             }
-        } else {
+        }
+        else {
             Log.i(TAG, "File Not Found");
             return "";
         }

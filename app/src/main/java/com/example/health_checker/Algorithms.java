@@ -5,17 +5,30 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * Main Algorithm class
+ */
 public class Algorithms {
+    /**
+     * Calculate Moving Avg
+     * @param period
+     * @param data
+     * @return
+     */
     public List<Double> calcMovingAvg(int period, List<Double> data) {
         SimpleMovingAverage sma = new SimpleMovingAverage(period);
         List<Double> avgData = sma.getMA(data);
         return avgData;
     }
 
+    /**
+     * Method to count zero crossing
+     * @param points
+     * @return
+     */
     public int countZeroCrossings(List<Double> points) {
         double prev = points.get(0);
         double prevSlope = 0;
-        float st = 1280;
         double p;
         List<Double> extremes = new ArrayList<Double>();
         int peakCount = 0;
@@ -33,10 +46,14 @@ public class Algorithms {
         return peakCount;
     }
 
+    /**
+     * Method for count Zero Threshold
+     * @param points
+     * @return
+     */
     public int countZerosThreshold(List<Double> points) {
         double prev = points.get(0);
         double prevSlope = 0;
-        float st = 1280;
         double p;
         List<Double> extremes = new ArrayList<Double>();
         List<Double> widths = new ArrayList<Double>();
@@ -55,7 +72,6 @@ public class Algorithms {
             prev = p;
         }
 
-        boolean sd = false;
         for (int i = 1; i < extremes.size(); i++) {
 
             widths.add(Math.abs(extremes.get(i) - extremes.get(i - 1)));
@@ -78,20 +94,30 @@ public class Algorithms {
     }
 }
 
+/**
+ * Main class for simple moving avg
+ */
 class SimpleMovingAverage {
     private final int period;
     Queue<Double> window = new LinkedList<Double>();
     private double sum;
-    private float[] tmp = new float[20];
 
+    /**
+     * Constructor Mathod
+     * @param period
+     */
     public SimpleMovingAverage(int period) {
         assert period > 0 : "Period must be a positive integer!";
         this.period = period;
     }
 
+    /**
+     * Get a new List of Number
+     * @param data
+     * @return
+     */
     public List<Double> getMA(List<Double> data) {
         List<Double> myData = new ArrayList<Double>(data.size());
-        float[] tmp = new float[20];
 
         for (double x : data) {
             newNum(x);
@@ -100,6 +126,10 @@ class SimpleMovingAverage {
         return myData;
     }
 
+    /**
+     * Update a number
+     * @param num
+     */
     public void newNum(double num) {
         sum += num;
         window.add(num);
@@ -108,8 +138,13 @@ class SimpleMovingAverage {
         }
     }
 
+    /**
+     * Get the avg in the window
+     * @return
+     */
     public double getAvg() {
-        if (window.isEmpty()) return 0;
+        if (window.isEmpty())
+            return 0;
         return sum / window.size();
     }
 }

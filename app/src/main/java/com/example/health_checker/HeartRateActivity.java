@@ -31,21 +31,27 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * Main class for HeartRate
+ */
 public class HeartRateActivity extends AppCompatActivity {
+
     private static final int VIDEO_CAPTURE = 101;
+    private ProgressDialog progressDialog;
     CameraActivity cameraActivity;
     String videoName = "heartRate.mp4";
     String folderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Health-Checker/";
     String aviName = "heartRate.avi";
-    private int fileId;
     String mpjegName = "heartRate.mjpeg";
     DatabaseHandler dbHandler;
-    String value;
+    String heartRateValue;
     Button upload;
-    private Uri fileUri;
-    private ProgressDialog progressDialog;
 
 
+    /**
+     * Constructor for the class
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +69,7 @@ public class HeartRateActivity extends AppCompatActivity {
 
         measure.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                start_recording_intent();
+                startRecordingIntent();
                 progressDialog = new ProgressDialog(getApplicationContext());
                 progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
                 progressDialog = ProgressDialog.show(HeartRateActivity.this, "Please wait", "Measuring Heart Rate...", false, false);
@@ -77,7 +83,7 @@ public class HeartRateActivity extends AppCompatActivity {
                 dbHandler.createLoggingDatabase();
                 dbHandler.createLoggingTable();
 
-                if (dbHandler.uploadLoggingData(Integer.parseInt(value), "HeartRate")) {
+                if (dbHandler.uploadLoggingData(Integer.parseInt(heartRateValue), "HeartRate")) {
                     Toast.makeText(HeartRateActivity.this, "Data Uploaded", Toast.LENGTH_LONG).show();
                     upload.setVisibility(View.INVISIBLE);
                 } else {
@@ -89,18 +95,27 @@ public class HeartRateActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * check if device has camera
+     * @return
+     */
     private boolean hasCamera() {
         return getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY);
     }
 
-    public void start_recording_intent() {
-        int recordValue = 0;
+    /**
+     * start Recording Intent
+     */
+    public void startRecordingIntent() {
         Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 45);
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivityForResult(intent, VIDEO_CAPTURE);
     }
 
+    /**
+     * Set the camera & storage permissions
+     */
     void configurePermissions() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -111,10 +126,14 @@ public class HeartRateActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Main method for Result
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     protected void onActivityResult(int requestCode,
                                     int resultCode, Intent data) {
-        int ix;
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == VIDEO_CAPTURE) {
             if (resultCode == RESULT_OK) {
@@ -148,7 +167,6 @@ public class HeartRateActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                int[] ie = new int[1024];
                 byte[] buf = new byte[1024];
                 int len;
 
@@ -176,9 +194,10 @@ public class HeartRateActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     *  Convert Video Commands
+     */
     public void convertVideoCommands() {
-        String cmd = "new";
         FFmpeg ffmpeg = FFmpeg.getInstance(this);
         try {
             ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
@@ -199,17 +218,17 @@ public class HeartRateActivity extends AppCompatActivity {
                 public void onFinish() {
                 }
             });
-        } catch (FFmpegNotSupportedException e) {
+        }
+        catch (FFmpegNotSupportedException e) {
         }
 
-        File newfile = new File(folderPath + mpjegName);
+        File newFile = new File(folderPath + mpjegName);
 
-        if (newfile.exists()) {
-            newfile.delete();
+        if (newFile.exists()) {
+            newFile.delete();
         }
 
         try {
-            int status = -1;
             ffmpeg.execute(new String[]{"-i", folderPath + videoName, "-vcodec", "mjpeg", folderPath + mpjegName}, new ExecuteBinaryResponseHandler() {
 
                 @Override
@@ -218,7 +237,6 @@ public class HeartRateActivity extends AppCompatActivity {
 
                 @Override
                 public void onProgress(String message) {
-
                 }
 
                 @Override
@@ -227,24 +245,22 @@ public class HeartRateActivity extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(String message) {
-
                 }
 
                 @Override
                 public void onFinish() {
-
                 }
             });
-        } catch (FFmpegCommandAlreadyRunningException e) {
+        }
+        catch (FFmpegCommandAlreadyRunningException e) {
         }
 
-        File avi_newfile = new File(folderPath + aviName);
+        File aviNewFile = new File(folderPath + aviName);
 
-        if (avi_newfile.exists()) {
-            avi_newfile.delete();
+        if (aviNewFile.exists()) {
+            aviNewFile.delete();
         }
         try {
-            int status = 2;
             ffmpeg.execute(new String[]{"-i", folderPath + mpjegName, "-vcodec", "mjpeg", folderPath + aviName}, new ExecuteBinaryResponseHandler() {
 
                 @Override
@@ -269,17 +285,16 @@ public class HeartRateActivity extends AppCompatActivity {
 
                 @Override
                 public void onFinish() {
-                int status = 0;
                     while (true) {
 
                         try {
-                            String heart_rate = cameraActivity.measureHeartRate(folderPath, aviName);
-                            if (heart_rate != "") {
+                            String heartRateResponse = cameraActivity.measureHeartRate(folderPath, aviName);
+                            if (heartRateResponse != "") {
                                 TextView textView = findViewById(R.id.heartRateValTextView);
-                                Button button = findViewById(R.id.heartRateBtn);
-                                value = heart_rate;
-                                textView.setText("HEART RATE IS: " + heart_rate + "\n");
-                                button.setText("MEASURE HEART RATE AGAIN");
+                                Button heartRateBtn = findViewById(R.id.heartRateBtn);
+                                heartRateValue = heartRateResponse;
+                                textView.setText("HEART RATE IS: " + heartRateResponse + "\n");
+                                heartRateBtn.setText("MEASURE HEART RATE AGAIN");
                                 progressDialog.dismiss();
                                 upload.setVisibility(View.VISIBLE);
                                 break;
@@ -295,6 +310,4 @@ public class HeartRateActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
-
 }

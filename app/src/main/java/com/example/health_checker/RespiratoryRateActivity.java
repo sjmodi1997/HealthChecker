@@ -15,13 +15,20 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+/**
+ * Class for RespiratoryRate Activity
+ */
 public class RespiratoryRateActivity extends AppCompatActivity {
     DatabaseHandler dbHandler;
     String respiratoryRateValue;
     private ProgressDialog progressDialog;
     private final BroadcastReceiver msgReceiver = new BroadcastReceiver() {
+        /**
+         * Display the respiratory rate
+         * @param context
+         * @param intent
+         */
         @Override
-        // Display the respiratory rate
         public void onReceive(Context context, Intent intent) {
             respiratoryRateValue = intent.getStringExtra("RRvalue");
 
@@ -41,6 +48,10 @@ public class RespiratoryRateActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * On Create Method
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -82,12 +93,18 @@ public class RespiratoryRateActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Resume Method
+     */
     @Override
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(msgReceiver, new IntentFilter("Respiratory Rate"));
     }
 
+    /**
+     * Pause Method
+     */
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(msgReceiver);

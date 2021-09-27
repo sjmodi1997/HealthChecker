@@ -17,7 +17,6 @@ public class DatabaseHandler {
     final String TAG = "DB";
     final String FAIL_TAG = "FAIL";
     String folder_path = "/storage/emulated/0/Health-Checker/";
-    //String folder_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Health-Checker/";
     private String databaseName = "HealthHistory";
     private SQLiteDatabase db;
     String[] columnsList = {

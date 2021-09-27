@@ -15,10 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.HashMap;
 
+/**
+ * Class to Log Symptoms in DB
+ */
 public class SymptomLoggingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private float rate;
-    private DatabaseHandler db_handler;
+    private DatabaseHandler dbHandler;
     private String symptomName;
     private String [] symptomsList = {
             "Breathing Problem",
@@ -31,6 +34,10 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
     private HashMap<String, Float> mapSymptomToRating;
     private RatingBar ratingBar;
 
+    /**
+     * Constructor Method
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,14 +87,14 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
                     Toast.makeText(SymptomLoggingActivity.this, "Please fill all the Symptom", Toast.LENGTH_LONG).show();
                     return;
                 }
-                TextView RespiRateView = (TextView) findViewById(R.id.RespiRateValTextView);
-                db_handler = new DatabaseHandler();
-                db_handler.createLoggingDatabase();
-                db_handler.createLoggingTable();
+
+                dbHandler = new DatabaseHandler();
+                dbHandler.createLoggingDatabase();
+                dbHandler.createLoggingTable();
                 boolean status = true;
 
                 for(int i = 0; i < symptomsList.length; i++){
-                    status = status ^ db_handler.uploadLoggingData(mapSymptomToRating.get(symptomsList[i]), symptomsList[i]);
+                    status = status ^ dbHandler.uploadLoggingData(mapSymptomToRating.get(symptomsList[i]), symptomsList[i]);
                 }
                 if(!status){
                     Log.d("Failed","Data Upload Failed");
@@ -111,6 +118,13 @@ public class SymptomLoggingActivity extends AppCompatActivity implements Adapter
 
     }
 
+    /**
+     * Method to add functionality when an item is selected.
+     * @param adapterView
+     * @param view
+     * @param i
+     * @param l
+     */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         String selected_item = (String) adapterView.getItemAtPosition(i);

@@ -18,29 +18,48 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * RespritoryRateService Method
+ */
 public class RespiratoryRateService extends Service implements SensorEventListener {
-    int i = 0;
-    double[] accelValuesX = new double[1280];
-    double[] accelValuesY = new double[1280];
-    double[] accelValuesZ = new double[1280];
-    private SensorManager manager;
+    int count;
+    final int MAX_SIZE = 1280;
+    double[] accelValuesX;
+    double[] accelValuesY;
+    double[] accelValuesZ;
+    private SensorManager sensorManager;
     private Sensor sensorAccel;
 
 
     public RespiratoryRateService() {
+        count = 0;
+        accelValuesX = new double[MAX_SIZE];
+        accelValuesY = new double[MAX_SIZE];
+        accelValuesZ = new double[MAX_SIZE];
     }
 
+    /**
+     * throws exception if not implemented
+     * @param intent
+     * @return
+     */
     @Override
     public IBinder onBind(Intent intent) {
-        // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
+    /**
+     * Method to start the service
+     * @param intent
+     * @param flags
+     * @param startId
+     * @return
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        manager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        sensorAccel = manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        manager.registerListener(this, sensorAccel, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        sensorAccel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        sensorManager.registerListener(this, sensorAccel, SensorManager.SENSOR_DELAY_NORMAL);
 
         try {
             Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -53,6 +72,10 @@ public class RespiratoryRateService extends Service implements SensorEventListen
         return START_NOT_STICKY;
     }
 
+    /**
+     * Main methdo to calculate RespiratoryRate
+     * @return int
+     */
     private int getRespiratoryRate() {
         List<Double> x = new ArrayList<Double>();
         List<Double> y = new ArrayList<Double>();
@@ -96,19 +119,23 @@ public class RespiratoryRateService extends Service implements SensorEventListen
         return (int) peaksZ / 2;
     }
 
+    /**
+     * Method to use if you want to use different Sensor
+     * @param event
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor accelSensor = event.sensor;
 
         if (accelSensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            i++;
-            accelValuesX[i] = event.values[0];
-            accelValuesY[i] = event.values[1];
-            accelValuesZ[i] = event.values[2];
+            count++;
+            accelValuesX[count] = event.values[0];
+            accelValuesY[count] = event.values[1];
+            accelValuesZ[count] = event.values[2];
 
-            if (i >= 1279) {
-                i = 0;
-                manager.unregisterListener(this);
+            if (count >= MAX_SIZE-1) {
+                count = 0;
+                sensorManager.unregisterListener(this);
 
                 Intent intent = new Intent("Respiratory Rate"); //put the same message as in the filter you used in the activity when registering the receiver
                 String val = Integer.toString(getRespiratoryRate());
