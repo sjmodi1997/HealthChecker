@@ -16,28 +16,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class RespiratoryRateActivity extends AppCompatActivity {
-    DatabaseHandler db_handler;
-    String value;
+    DatabaseHandler dbHandler;
+    String respiratoryRateValue;
     private ProgressDialog progressDialog;
     private final BroadcastReceiver msgReceiver = new BroadcastReceiver() {
         @Override
+        // Display the respiratory rate
         public void onReceive(Context context, Intent intent) {
-            // Display the respiratory rate
-            value = intent.getStringExtra("RRvalue");
+            respiratoryRateValue = intent.getStringExtra("RRvalue");
 
-            if (value == null) {
+            if (respiratoryRateValue == null) {
                 Log.d("Null", " null");
             }
             progressDialog.dismiss();
 
-            TextView RespiRateView = findViewById(R.id.RespiRateValTextView);
-            RespiRateView.setText("RESPIRATORY RATE IS " + value);
-            Button measure = findViewById(R.id.RespiRateBtn);
-            Button upload = findViewById(R.id.RespiRateUpData);
+            TextView respiratoryRateView = findViewById(R.id.RespiRateValTextView);
+            respiratoryRateView.setText("RESPIRATORY RATE IS " + respiratoryRateValue);
+            Button measureButton = findViewById(R.id.RespiRateBtn);
+            Button uploadButton = findViewById(R.id.RespiRateUpData);
 
-            upload.setVisibility(View.VISIBLE);
+            uploadButton.setVisibility(View.VISIBLE);
 
-            measure.setText("MEASURE RESPIRATORY RATE AGAIN");
+            measureButton.setText("MEASURE RESPIRATORY RATE AGAIN");
         }
     };
 
@@ -47,11 +47,11 @@ public class RespiratoryRateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_respiratory_rate);
 
-        Button measure = findViewById(R.id.RespiRateBtn);
-        Button upload = findViewById(R.id.RespiRateUpData);
-        upload.setVisibility(View.INVISIBLE);
+        Button measureButton = findViewById(R.id.RespiRateBtn);
+        Button uploadButton = findViewById(R.id.RespiRateUpData);
+        uploadButton.setVisibility(View.INVISIBLE);
 
-        measure.setOnClickListener(new View.OnClickListener() {
+        measureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent measureRate = new Intent(RespiratoryRateActivity.this, RespiratoryRateService.class);
@@ -62,21 +62,21 @@ public class RespiratoryRateActivity extends AppCompatActivity {
             }
         });
 
-        upload.setOnClickListener(new View.OnClickListener() {
+        // To Log the Data
+        uploadButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                TextView RespiRateView = findViewById(R.id.RespiRateValTextView);
-                db_handler = new DatabaseHandler();
-                db_handler.createLoggingDatabase();
-                db_handler.createLoggingTable();
+                TextView respiratoryRateView = findViewById(R.id.RespiRateValTextView);
+                dbHandler = new DatabaseHandler();
+                dbHandler.createLoggingDatabase();
+                dbHandler.createLoggingTable();
 
-                if (db_handler.uploadLoggingData(Integer.parseInt(value), "RespiratoryRate")) {
+                if (dbHandler.uploadLoggingData(Integer.parseInt(respiratoryRateValue), "RespiratoryRate")) {
                     Toast.makeText(RespiratoryRateActivity.this, "Data Uploaded", Toast.LENGTH_LONG).show();
-                    upload.setVisibility(View.INVISIBLE);
+                    uploadButton.setVisibility(View.INVISIBLE);
                 } else {
                     Toast.makeText(RespiratoryRateActivity.this, "Upload Failed", Toast.LENGTH_LONG).show();
-                    upload.setVisibility(View.VISIBLE);
+                    uploadButton.setVisibility(View.VISIBLE);
                 }
-                //upload.setClickable(false);
             }
         });
 
